@@ -114,6 +114,12 @@ html[data-ob-theme="dark"] body {
     padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
 }
 
+#view-container:has(#chat-scroller),
+#view-container.chat-view-active {
+    padding-bottom: 0 !important;
+    overflow: hidden !important;
+}
+
 /* Fixed Bottom Tab Bar Layout & Mask Icons */
 #app-tabbar,
 .tabbar {

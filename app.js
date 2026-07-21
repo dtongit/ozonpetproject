@@ -172,6 +172,10 @@ function navigateToTab(tabName) {
     // Show tabbar in case it was hidden
     document.getElementById('app-tabbar').style.display = 'flex';
 
+    window.scrollTo(0, 0);
+    const container = document.getElementById('view-container');
+    if (container) container.scrollTop = 0;
+
     renderActiveView();
 }
 
@@ -179,6 +183,7 @@ function navigateToTab(tabName) {
 function renderActiveView() {
     const container = document.getElementById('view-container');
     container.innerHTML = ''; // Clear viewport
+    container.classList.toggle('chat-view-active', appState.activeTab === 'chat' && appState.activeDetailTxId === null);
 
     if (appState.activeDetailTxId !== null) {
         renderTransactionDetails(container, appState.activeDetailTxId);
@@ -798,24 +803,29 @@ function togglePaymentsSegment(seg) {
 // --- 5. SUPPORT CHAT VIEW ---
 function renderChatView(container) {
     container.innerHTML = `
-        <div class="header svelte-1hmh4r3" style="padding: 12px 16px; display: flex; gap: 12px; align-items: center; border-bottom: 1px solid var(--border-dark); background: var(--layerFloor0, #0e1113);">
-            <div style="width: 38px; height: 38px; border-radius: 50%; background: #005bff; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 9px; line-height: 1.1; flex-shrink: 0;">
-                <span>ozon</span>
-                <span>банк</span>
+        <div style="display: flex; flex-direction: column; height: calc(100vh - 56px - env(safe-area-inset-bottom, 0px)); overflow: hidden;">
+            <!-- Header -->
+            <div class="header svelte-1hmh4r3" style="padding: 12px 16px; display: flex; gap: 12px; align-items: center; border-bottom: 1px solid var(--border-dark); background: var(--layerFloor0, #0e1113); flex-shrink: 0; z-index: 10;">
+                <div style="width: 38px; height: 38px; border-radius: 50%; background: #005bff; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 9px; line-height: 1.1; flex-shrink: 0;">
+                    <span>ozon</span>
+                    <span>банк</span>
+                </div>
+                <div>
+                    <h4 style="font-size: 15px; font-weight: 700; color: var(--textPrimary); margin: 0;">Поддержка</h4>
+                    <div style="font-size: 12px; color: var(--textSecondary); font-weight: 400; margin-top: 1px;">Онлайн 24/7</div>
+                </div>
             </div>
-            <div>
-                <h4 style="font-size: 15px; font-weight: 700; color: var(--textPrimary); margin: 0;">Поддержка</h4>
-                <div style="font-size: 12px; color: var(--textSecondary); font-weight: 400; margin-top: 1px;">Онлайн 24/7</div>
-            </div>
-        </div>
 
-        <div style="display: flex; flex-direction: column; height: calc(100% - 63px); position: relative;">
-            <div class="chat-messages-container" id="chat-scroller" style="padding-bottom: 110px; overflow-y: auto;">
-                <div style="text-align: center; color: var(--textSecondary); font-size: 12px; margin: 14px 0 10px;">25 марта</div>
-                <div id="chat-messages-list"></div>
+            <!-- Scrollable Messages List -->
+            <div class="chat-messages-container" id="chat-scroller" style="flex: 1; overflow-y: auto; overflow-x: hidden; padding: 12px 0 20px 0; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;">
+                <div style="display: flex; flex-direction: column; min-height: 100%; justify-content: flex-end; width: 100%;">
+                    <div style="text-align: center; color: var(--textSecondary); font-size: 12px; margin: 4px 0 14px;">25 марта</div>
+                    <div id="chat-messages-list"></div>
+                </div>
             </div>
             
-            <div class="chat-input-area-custom" style="display: flex; gap: 8px; align-items: center; position: fixed; bottom: calc(56px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); max-width: 440px; width: 100%; z-index: 100; padding: 8px 12px; background: var(--layerFloor0, #0e1113); border-top: 1px solid var(--border-dark);">
+            <!-- Bottom Input Bar -->
+            <div class="chat-input-area-custom" style="display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: var(--layerFloor0, #0e1113); border-top: 1px solid var(--border-dark); flex-shrink: 0; position: relative; z-index: 10;">
                 <button class="chat-attach-btn" onclick="alert('Прикрепить файлы')">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-3.31 2.69-6 6-6s6 2.69 6 6v10.5c0 1.38-1.12 2.5-2.5 2.5s-2.5-1.12-2.5-2.5V6H10v9.5c0 2.48 2.02 4.5 4.5 4.5s4.5-2.02 4.5-4.5V5c0-4.42-3.58-8-8-8s-8 3.58-8 8v12.5c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5V6h-1.5z" fill="currentColor"/></svg>
                 </button>
@@ -828,6 +838,26 @@ function renderChatView(container) {
     `;
 
     renderChatMessagesOnly();
+    triggerChatScrollToBottom();
+}
+
+function triggerChatScrollToBottom() {
+    scrollChatToBottom();
+    requestAnimationFrame(() => {
+        scrollChatToBottom();
+        setTimeout(scrollChatToBottom, 0);
+        setTimeout(scrollChatToBottom, 50);
+        setTimeout(scrollChatToBottom, 150);
+        setTimeout(scrollChatToBottom, 350);
+        setTimeout(scrollChatToBottom, 600);
+    });
+}
+
+function scrollChatToBottom() {
+    const scroller = document.getElementById('chat-scroller');
+    if (scroller) {
+        scroller.scrollTop = scroller.scrollHeight;
+    }
 }
 
 function renderChatMessagesOnly() {
@@ -889,10 +919,7 @@ function renderChatMessagesOnly() {
         }
     });
 
-    const scroller = document.getElementById('chat-scroller');
-    if (scroller) {
-        scroller.scrollTop = scroller.scrollHeight;
-    }
+    triggerChatScrollToBottom();
 }
 
 function handleChatKeyPress(event) {
@@ -931,7 +958,7 @@ function sendChatMessage() {
             replyText = 'Реквизиты вашего счёта доступны в начале этой переписки. Вы можете скопировать их для отправки вашим партнерам.';
         } else if (lowerText.includes('баланс') || lowerText.includes('деньги') || lowerText.includes('сколько')) {
             replyText = `Ваш текущий баланс:\n• Счёт для бизнеса: ${formatAmount(appState.balanceBusiness)}\n• Личный счёт: ${formatAmount(appState.balancePersonal)}`;
-        } else if (lowerText.includes('привет') || lowerText.includes('здравствуй')) {
+        } else if (lowerText.includes('привет') || lowerText.includes('здравствуй') || lowerText.includes('privet') || lowerText.includes('hello') || lowerText.includes('hi')) {
             replyText = 'Здравствуйте! Я автоматический помощник Ozon Finance. Чем могу помочь?';
         }
 
@@ -943,7 +970,7 @@ function sendChatMessage() {
         });
 
         renderChatMessagesOnly();
-    }, 1500);
+    }, 1000);
 }
 
 // --- 6. SERVICES VIEW ---
