@@ -1086,18 +1086,6 @@ function renderServicesView(container) {
 
 function createNewProduct() {
     alert('Открытие счета временно недоступно.');
-    appState.balanceBusiness += 50000;
-
-    appState.transactions.unshift({
-        id: appState.transactions.length + 1,
-        date: new Date(),
-        title: 'ООО Озон Банк',
-        amount: 50000.00,
-        type: 'incoming',
-        description: 'Стартовый баланс по новому продукту. Зачислен на бизнес-счёт.'
-    });
-
-    renderActiveView();
 }
 
 // Modal Windows Implementation
