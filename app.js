@@ -350,8 +350,8 @@ function renderHomeView(container) {
 function getTxIconSvg(tx) {
     const title = (tx.title || '').toLowerCase();
     const desc = (tx.description || '').toLowerCase();
-    if (title.includes('максим') || title.includes('юрий') || desc.includes('сбп')) {
-        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14v-4H8l4-4 4 4h-3v4h-2z" fill="currentColor"/></svg>`;
+    if (title.includes('снятие') || desc.includes('снятие') || title.includes('наличн') || desc.includes('наличн') || title.includes('максим') || title.includes('юрий') || desc.includes('сбп')) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M19 14V6c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2zm-7-1c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm-9 5h18v2H3v-2z" fill="currentColor"/></svg>`;
     } else if (title.includes('кофейня') || title.includes('coffee')) {
         return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18.5 3H6c-1.1 0-2 .9-2 2v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h.5c1.38 0 2.5-1.12 2.5-2.5S19.88 7 18.5 7H18V5c0-1.1-.9-2-2-2zm0 6H18V9h.5c.28 0 .5.22.5.5s-.22.5-.5.5zM16 15c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2V5h10v10z" fill="currentColor"/></svg>`;
     } else if (title.includes('такси') || title.includes('taxi')) {

@@ -2,7 +2,7 @@
 
 // 1. Account Balances for Home Page
 var INITIAL_BALANCES = {
-    business: 0.50, // Счёт для бизнеса
+    business: 60206.50, // Счёт для бизнеса
     personal: 0.00,   // Личный счёт
 };
 
@@ -25,46 +25,8 @@ var ALD_REQUISITES = {
 };
 
 // 2. Initial Payments / Transaction History
-// Exact transactions from file (incoming deposits) paired with matched SBP outgoing transfers to Максим Александрович Л. and Юрий Геннадьевич П.
+// Exact transactions from file (incoming deposits) paired with matched cash withdrawals.
 var INITIAL_PAYMENTS = [
-    // --- 15.08.2026 (ALD 19700) ---
-    {
-        date: "2026-08-15T12:54:00Z",
-        amount: -7700.00,
-        status: "Исполнен",
-        title: "Юрий Геннадьевич П.",
-        description: "Перевод через СБП в Т-Банк. НДС не облагается"
-    },
-    {
-        date: "2026-08-15T12:37:00Z",
-        amount: -12000.00,
-        status: "Исполнен",
-        title: "Максим Александрович Л.",
-        description: "Перевод через СБП в Сбербанк. НДС не облагается"
-    },
-    Object.assign({
-        date: "2026-08-15T12:12:00Z",
-        amount: 19700.00,
-        status: "Исполнен",
-        title: "ООО «СЕМЕЙНАЯ СТОМАТОЛОГИЯ АЛДКЛИНИК»",
-        description: "Перечисление по договору №2 от 2.07.2026г. Без НДС"
-    }, ALD_REQUISITES),
-
-    // --- 05.08.2026 (LAMEY 13475) ---
-    {
-        date: "2026-08-05T16:48:00Z",
-        amount: -5000.00,
-        status: "Исполнен",
-        title: "Юрий Геннадьевич П.",
-        description: "Перевод через СБП в Т-Банк. НДС не облагается"
-    },
-    {
-        date: "2026-08-05T15:42:00Z",
-        amount: -8475.00,
-        status: "Исполнен",
-        title: "Максим Александрович Л.",
-        description: "Перевод через СБП в Сбербанк. НДС не облагается"
-    },
     Object.assign({
         date: "2026-08-05T15:19:00Z",
         amount: 13475.00,
@@ -72,17 +34,40 @@ var INITIAL_PAYMENTS = [
         title: "ООО «Ламэй»",
         description: "Перечисл.согласно Дог.от 15.06.2026г.// НДС не облагается"
     }, LAMEI_REQUISITES),
-
-    // --- 02.08.2026 (ALD 19700) ---
-    {
-        date: "2026-08-02T10:47:00Z",
-        amount: -19700.00,
+    Object.assign({
+        date: "2026-08-05T12:12:00Z",
+        amount: 19700.00,
         status: "Исполнен",
-        title: "Максим Александрович Л.",
-        description: "Перевод через СБП в Сбербанк. НДС не облагается"
+        title: "ООО «СЕМЕЙНАЯ СТОМАТОЛОГИЯ АЛДКЛИНИК»",
+        description: "Перечисление по договору №2 от 2.07.2026г. Без НДС"
+    }, ALD_REQUISITES),
+
+    // --- 03.08.2026 (Ozon 13075) ---
+    {
+        date: "2026-08-03T16:15:00Z",
+        amount: -13075.00,
+        status: "Исполнен",
+        title: "Ozon",
+        description: "Оплата товара на маркетплейсе Ozon"
+    },
+
+    // --- 27.07.2026 (НПД 1182) ---
+    {
+        date: "2026-07-28T17:38:00Z",
+        amount: -15000.00,
+        status: "Исполнен",
+        title: "Снятие наличных",
+        description: "Снятие наличных в банкомате. Без комиссии"
+    },
+    {
+        date: "2026-07-27T11:14:00Z",
+        amount: -1182.00,
+        status: "Исполнен",
+        title: "Оплата налога НПД",
+        description: "Уплата налога на профессиональный доход за июнь 2026 г. Без НДС"
     },
     Object.assign({
-        date: "2026-08-02T10:23:00Z",
+        date: "2026-07-27T10:23:00Z",
         amount: 19700.00,
         status: "Исполнен",
         title: "ООО «СЕМЕЙНАЯ СТОМАТОЛОГИЯ АЛДКЛИНИК»",
@@ -90,20 +75,6 @@ var INITIAL_PAYMENTS = [
     }, ALD_REQUISITES),
 
     // --- 21.07.2026 (LAMEY 13475) ---
-    {
-        date: "2026-07-21T17:38:00Z",
-        amount: -6475.00,
-        status: "Исполнен",
-        title: "Юрий Геннадьевич П.",
-        description: "Перевод через СБП в Т-Банк. НДС не облагается"
-    },
-    {
-        date: "2026-07-21T17:09:00Z",
-        amount: -7000.00,
-        status: "Исполнен",
-        title: "Максим Александрович Л.",
-        description: "Перевод через СБП в Сбербанк. НДС не облагается"
-    },
     Object.assign({
         date: "2026-07-21T16:44:00Z",
         amount: 13475.00,
@@ -111,15 +82,6 @@ var INITIAL_PAYMENTS = [
         title: "ООО «Ламэй»",
         description: "Перечисл.согласно Дог.от 15.06.2026г.// НДС не облагается"
     }, LAMEI_REQUISITES),
-
-    // --- 13.07.2026 (LAMEY 19700) ---
-    {
-        date: "2026-07-13T11:36:00Z",
-        amount: -19700.00,
-        status: "Исполнен",
-        title: "Юрий Геннадьевич П.",
-        description: "Перевод через СБП в Т-Банк. НДС не облагается"
-    },
     Object.assign({
         date: "2026-07-13T11:18:00Z",
         amount: 19700.00,
@@ -128,20 +90,22 @@ var INITIAL_PAYMENTS = [
         description: "Перечисл.согласно Дог.от 15.06.2026г.// НДС не облагается"
     }, LAMEI_REQUISITES),
 
+    // --- 03.07.2026 (Ozon 6287) ---
+    {
+        date: "2026-07-03T14:23:00Z",
+        amount: -6287.00,
+        status: "Исполнен",
+        title: "Ozon",
+        description: "Оплата товара на маркетплейсе Ozon"
+    },
+
     // --- 15.06.2026 (LAMEY 19700) ---
     {
-        date: "2026-06-15T15:22:00Z",
-        amount: -9700.00,
-        status: "Исполнен",
-        title: "Юрий Геннадьевич П.",
-        description: "Перевод через СБП в Т-Банк. НДС не облагается"
-    },
-    {
-        date: "2026-06-15T14:49:00Z",
+        date: "2026-06-22T15:22:00Z",
         amount: -10000.00,
         status: "Исполнен",
-        title: "Максим Александрович Л.",
-        description: "Перевод через СБП в Сбербанк. НДС не облагается"
+        title: "Снятие наличных",
+        description: "Снятие наличных в банкомате. Без комиссии"
     },
     Object.assign({
         date: "2026-06-15T14:31:00Z",
