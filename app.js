@@ -2,40 +2,17 @@
 
 // --- STATE MANAGEMENT ---
 let appState = {
-    balanceBusiness: 1025452.38,
-    balancePersonal: 18092.01,
+    balanceBusiness: (typeof INITIAL_BALANCES !== 'undefined' && INITIAL_BALANCES.business !== undefined) ? INITIAL_BALANCES.business : 0.50,
+    balancePersonal: (typeof INITIAL_BALANCES !== 'undefined' && INITIAL_BALANCES.personal !== undefined) ? INITIAL_BALANCES.personal : 0.00,
     activeTab: 'home',
     theme: 'dark', // 'dark' or 'light'
     activeDetailTxId: null, // If viewing transaction details
     paymentsSegment: 'send', // 'send' or 'receive'
 
-    // Initial Transaction History
-    transactions: [
-        {
-            id: 3,
-            date: new Date(2026, 3, 9, 16, 24), // 9 April 2026, 16:24
-            title: 'Фон Берг Юрген Александрович',
-            amount: -2100.00,
-            type: 'outcoming',
-            description: 'Перевод собственных средств. НДС не облагается'
-        },
-        {
-            id: 2,
-            date: new Date(2026, 2, 31, 23, 30), // 31 March 2026, 23:30
-            title: 'Фон Берг Юрген Александрович',
-            amount: -1000.00,
-            type: 'outcoming',
-            description: 'Перевод собственных средств. НДС не облагается'
-        },
-        {
-            id: 1,
-            date: new Date(2026, 2, 25, 13, 57), // 25 March 2026, 13:57
-            title: 'Фон Берг Юрген Александрович',
-            amount: 3100.00,
-            type: 'incoming',
-            description: 'Перевод собственных средств. НДС не облагается'
-        }
-    ],
+    // Initial Transaction History loaded from data.js
+    transactions: (typeof INITIAL_PAYMENTS !== 'undefined' && typeof parseInitialPayments === 'function') 
+        ? parseInitialPayments(INITIAL_PAYMENTS) 
+        : [],
 
     // Support Chat Messages
     chatMessages: [
@@ -370,6 +347,27 @@ function renderHomeView(container) {
     `;
 }
 
+function getTxIconSvg(tx) {
+    const title = (tx.title || '').toLowerCase();
+    const desc = (tx.description || '').toLowerCase();
+    if (title.includes('максим') || title.includes('юрий') || desc.includes('сбп')) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14v-4H8l4-4 4 4h-3v4h-2z" fill="currentColor"/></svg>`;
+    } else if (title.includes('кофейня') || title.includes('coffee')) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18.5 3H6c-1.1 0-2 .9-2 2v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h.5c1.38 0 2.5-1.12 2.5-2.5S19.88 7 18.5 7H18V5c0-1.1-.9-2-2-2zm0 6H18V9h.5c.28 0 .5.22.5.5s-.22.5-.5.5zM16 15c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2V5h10v10z" fill="currentColor"/></svg>`;
+    } else if (title.includes('такси') || title.includes('taxi')) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" fill="currentColor"/></svg>`;
+    } else if (title.includes('супермаркет') || title.includes('вкусвилл') || title.includes('пятёрочка') || title.includes('перекрёсток') || title.includes('продукты')) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></svg>`;
+    } else if (title.includes('азс') || title.includes('лукойл') || title.includes('газпромнефть')) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33 0 1.38 1.12 2.5 2.5 2.5.36 0 .69-.08 1-.21v7.21c0 .55-.45 1-1 1s-1-.45-1-1V14c0-1.1-.9-2-2-2h-1V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v16h10v-7.5h1.5v5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V9c0-.69-.28-1.32-.73-1.77zM12 10H4V5h8v5zm6 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" fill="currentColor"/></svg>`;
+    } else if (title.includes('аптека')) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M19 10.5h-5.5V5h-3v5.5H5v3h5.5V19h3v-5.5H19v-3z" fill="currentColor"/></svg>`;
+    } else if (title.includes('ozon') || tx.amount > 0) {
+        return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" fill="currentColor"/><path d="M12 17l4-4h-3V9h-2v4H8l4 4z" fill="currentColor"/></svg>`;
+    }
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7v2h20V7L12 2zm9 8H3v10h3v-7h4v7h4v-7h4v7h3V10zm-9 3c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></svg>`;
+}
+
 // --- 2. TRANSACTION HISTORY VIEW ---
 function renderHistoryView(container) {
     const grouped = {};
@@ -417,11 +415,11 @@ function renderHistoryView(container) {
             txRows += `
                 <div class="transaction-row" onclick="viewTransactionDetails(${tx.id})" style="display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border-dark); align-items: center; cursor: pointer;">
                     <div class="tx-icon-box">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7v2h20V7L12 2zm9 8H3v10h3v-7h4v7h4v-7h4v7h3V10zm-9 3c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></svg>
+                        ${getTxIconSvg(tx)}
                     </div>
                     <div style="flex: 1; min-width: 0;">
                         <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--textSecondary);">
-                            <span>${day} ${monthG}, ${timeStr} • Исполнен</span>
+                            <span>${day} ${monthG}, ${timeStr} • ${tx.status || 'Исполнен'}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 4px; align-items: center;">
                             <span style="font-weight: 500; font-size: 14px; color: var(--textPrimary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 65%;">${tx.title}</span>
@@ -532,6 +530,33 @@ function renderTransactionDetails(container, txId) {
     const amtColor = tx.amount > 0 ? '#15c96b' : 'var(--textPrimary)';
     const amtPrefix = tx.amount > 0 ? '+' : '';
 
+    let requisitesBlock = '';
+    if (tx.inn || tx.account || tx.bank || tx.bik) {
+        requisitesBlock = `
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border-dark); font-size: 13px; color: var(--textSecondary); display: flex; flex-direction: column; gap: 6px;">
+                <div style="font-weight: 600; color: var(--textPrimary); margin-bottom: 2px;">Реквизиты контрагента</div>
+                ${tx.inn ? `<div><span style="color: var(--textSecondary);">ИНН:</span> <span style="color: var(--textPrimary); font-weight: 500;">${tx.inn}</span></div>` : ''}
+                ${tx.ogrn ? `<div><span style="color: var(--textSecondary);">ОГРН:</span> <span style="color: var(--textPrimary); font-weight: 500;">${tx.ogrn}</span></div>` : ''}
+                ${tx.account ? `<div><span style="color: var(--textSecondary);">Р/с:</span> <span style="color: var(--textPrimary); font-weight: 500;">${tx.account}</span></div>` : ''}
+                ${tx.bank ? `<div><span style="color: var(--textSecondary);">Банк:</span> <span style="color: var(--textPrimary); font-weight: 500;">${tx.bank}</span></div>` : ''}
+                ${tx.bik ? `<div><span style="color: var(--textSecondary);">БИК:</span> <span style="color: var(--textPrimary); font-weight: 500;">${tx.bik}</span></div>` : ''}
+                ${tx.corrAccount ? `<div><span style="color: var(--textSecondary);">К/с:</span> <span style="color: var(--textPrimary); font-weight: 500;">${tx.corrAccount}</span></div>` : ''}
+                ${tx.address ? `<div><span style="color: var(--textSecondary);">Адрес:</span> <span style="color: var(--textPrimary); font-weight: 500;">${tx.address}</span></div>` : ''}
+            </div>
+        `;
+    }
+
+    const detailAlertText = tx.inn ? 
+        `Реквизиты платежа:\\n` +
+        `Получатель: ${tx.title}\\n` +
+        `ИНН: ${tx.inn}\\n` +
+        `ОГРН: ${tx.ogrn || 'Н/Д'}\\n` +
+        `Р/с: ${tx.account || 'Н/Д'}\\n` +
+        `Банк: ${tx.bank || 'АО Альфа-Банк'}\\n` +
+        `БИК: ${tx.bik || '046015207'}\\n` +
+        `Счёт списания: 40802810900001979691` 
+        : `Реквизиты платежа:\\nСчет списания: 40802810900001979691\\nБанк получателя: ООО Озон Банк\\nБИК: 044525104`;
+
     container.innerHTML = `
         <div class="header svelte-1hmh4r3" style="padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-dark);">
             <div class="details-back-btn" onclick="closeTransactionDetails()" style="cursor: pointer; padding: 4px;">
@@ -555,11 +580,13 @@ function renderTransactionDetails(container, txId) {
                     ${tx.title}
                 </div>
 
-                <div style="font-size: 13px; color: var(--textSecondary); line-height: 1.4; margin-bottom: 20px; text-align: left;">
+                <div style="font-size: 13px; color: var(--textSecondary); line-height: 1.4; margin-bottom: 16px; text-align: left;">
                     ${tx.description}
                 </div>
 
-                <button style="border: none; background: rgba(0, 91, 255, 0.12); color: #0084ff; font-weight: 600; font-size: 13px; padding: 10px 24px; border-radius: 10px; cursor: pointer; width: 100%;" onclick="alert('Реквизиты платежа:\\nСчет списания: 40802810900001234567\\nБанк получателя: ООО Озон Банк\\nБИК: 044525104')">
+                ${requisitesBlock}
+
+                <button style="border: none; background: rgba(0, 91, 255, 0.12); color: #0084ff; font-weight: 600; font-size: 13px; padding: 10px 24px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 16px;" onclick="alert('${detailAlertText}')">
                     Подробнее
                 </button>
             </div>

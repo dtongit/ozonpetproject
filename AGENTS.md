@@ -20,6 +20,7 @@ Key Goals:
 ```
 /home/aiuser/bank/
 ├── index.html            # Main HTML entry point containing shell container (#app) & bottom tab bar
+├── data.js               # Initial data configuration: account balances & payment history definitions
 ├── app.js                # Core JS logic: state management, SPA router, dynamic view renderers, mock APIs
 ├── style.css             # Custom application layout, theme CSS variables, and component overrides
 ├── assets/               # Production icons, avatar assets (avatar_dark.png, avatar_light.png), and CSS bundles
