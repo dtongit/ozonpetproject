@@ -2,7 +2,17 @@
 
 // 1. Account Balances for Home Page
 var INITIAL_BALANCES = {
-    business: 60206.50, // Счёт для бизнеса
+    get business() {
+        if (typeof INITIAL_PAYMENTS !== 'undefined' && Array.isArray(INITIAL_PAYMENTS)) {
+            const sum = INITIAL_PAYMENTS.reduce((acc, item) => {
+                const amt = typeof item === 'object' && item !== null ? Number(item.amount || 0) : 0;
+                return acc + (isNaN(amt) ? 0 : amt);
+            }, 0);
+            return sum + 10;
+        }
+        return 10;
+    },
+    set business(val) {},
     personal: 0.00,   // Личный счёт
 };
 
@@ -28,7 +38,7 @@ var ALD_REQUISITES = {
 // Exact transactions from file (incoming deposits) paired with matched cash withdrawals.
 var INITIAL_PAYMENTS = [
     Object.assign({
-        date: "2026-08-05T15:19:00Z",
+        date: "2026-08-06T15:19:00Z",
         amount: 13475.00,
         status: "Исполнен",
         title: "ООО «Ламэй»",
@@ -36,16 +46,16 @@ var INITIAL_PAYMENTS = [
     }, LAMEI_REQUISITES),
     Object.assign({
         date: "2026-08-05T12:12:00Z",
-        amount: 19700.00,
+        amount: 17875.00,
         status: "Исполнен",
         title: "ООО «СЕМЕЙНАЯ СТОМАТОЛОГИЯ АЛДКЛИНИК»",
-        description: "Перечисление по договору №2 от 2.07.2026г. Без НДС"
+        description: "Перечисление по договору №2 от 02.07.2026г. Без НДС"
     }, ALD_REQUISITES),
 
     // --- 03.08.2026 (Ozon 13075) ---
     {
         date: "2026-08-03T16:15:00Z",
-        amount: -13075.00,
+        amount: -19027.00,
         status: "Исполнен",
         title: "Ozon",
         description: "Оплата товара на маркетплейсе Ozon"
@@ -68,10 +78,10 @@ var INITIAL_PAYMENTS = [
     },
     Object.assign({
         date: "2026-07-27T10:23:00Z",
-        amount: 19700.00,
+        amount: 17875.00,
         status: "Исполнен",
         title: "ООО «СЕМЕЙНАЯ СТОМАТОЛОГИЯ АЛДКЛИНИК»",
-        description: "Перечисление по договору №2 от 2.07.2026г. Без НДС"
+        description: "Перечисление по договору №2 от 02.07.2026г. Без НДС"
     }, ALD_REQUISITES),
 
     // --- 21.07.2026 (LAMEY 13475) ---
@@ -101,7 +111,7 @@ var INITIAL_PAYMENTS = [
 
     // --- 15.06.2026 (LAMEY 19700) ---
     {
-        date: "2026-06-22T15:22:00Z",
+        date: "2026-06-22T17:22:00Z",
         amount: -10000.00,
         status: "Исполнен",
         title: "Снятие наличных",

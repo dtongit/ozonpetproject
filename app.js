@@ -2,7 +2,14 @@
 
 // --- STATE MANAGEMENT ---
 let appState = {
-    balanceBusiness: (typeof INITIAL_BALANCES !== 'undefined' && INITIAL_BALANCES.business !== undefined) ? INITIAL_BALANCES.business : 0.50,
+    get balanceBusiness() {
+        if (!this.transactions || !Array.isArray(this.transactions)) return 10;
+        const sum = this.transactions.reduce((acc, tx) => acc + (Number(tx.amount) || 0), 0);
+        return sum + 10;
+    },
+    set balanceBusiness(val) {
+        // Business balance is always strictly derived from transactions + 10 RUB
+    },
     balancePersonal: (typeof INITIAL_BALANCES !== 'undefined' && INITIAL_BALANCES.personal !== undefined) ? INITIAL_BALANCES.personal : 0.00,
     activeTab: 'home',
     theme: 'dark', // 'dark' or 'light'
@@ -1314,9 +1321,9 @@ window.openBetweenAccountsModal = function () {
             id: appState.transactions.length + 1,
             date: new Date(),
             title: 'Перевод между счетами',
-            amount: -amtVal,
-            type: 'outcoming',
-            description: dir === 'p-to-b' ? 'Списание с личного счета на бизнес-счёт' : 'Списание с бизнес-счета на личный счет'
+            amount: dir === 'p-to-b' ? amtVal : -amtVal,
+            type: dir === 'p-to-b' ? 'incoming' : 'outcoming',
+            description: dir === 'p-to-b' ? 'Зачисление на бизнес-счёт с личного счета' : 'Списание с бизнес-счета на личный счет'
         });
 
         alert(`Перевод на сумму ${formatAmount(amtVal)} успешно выполнен!`);
